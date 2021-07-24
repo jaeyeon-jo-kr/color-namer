@@ -2,18 +2,14 @@
   (:require
    [reitit.ring :as reitit-ring]
    [color-namer.middleware :refer [middleware]]
+   [color-namer.db-client :as db-client]
    [hiccup.page :refer [include-js include-css html5]]
    [config.core :refer [env]]
-   [datomic.api :as d]))
+   [clojure.edn :as edn]))
 
 (def db {:dbtype "mysql" :dbname "color_namer"
          :user "jaeyeon" :password "12345678" :host "localhost"})
 
-(def db-uri "datomic:mem://foo")
-
-(def client (d/create-database db-uri))
-
-(def conn (d/connect db-uri))
 
 (def mount-target
   [:div#app
@@ -45,29 +41,28 @@
 
 (defn add-color-handler
   [_request]
+  (println _request)
   {:status 200
    :headers {"Content-Type" "application/edn"}
-   :body (str {:id 1 :color 1})})
+   :body (db-client/add-colors (:body _request))})
 
 (defn get-color-handler
   [_request]
   (println _request)
   {:status 200
    :headers {"Content-Type" "application/edn"}
-   :body (str {:id 1 :color 2})})
+   :body (str (db-client/find-all))})
 
 (def app
   (reitit-ring/ring-handler
    (reitit-ring/router
     [["/" {:get {:handler index-handler}}]
-     ["/color-name"
+     ["/color"
       ["/register" {:post {:handler add-color-handler}}]
-      ["/find/:item-id" {:get {:handler get-color-handler
-                          :parameters {:path {:item-id int?}}}}]]
-     ["/items"
-      ["" {:get {:handler index-handler}}]
-      ["/:item-id" {:get {:handler index-handler
-                          :parameters {:path {:item-id int?}}}}]]
+      ["/find/"
+       ["index/:item-id" {:get {:handler get-color-handler
+                          :parameters {:path {:item-id int?}}}}]
+       ["all" {:get {:handler get-color-handler}}]]]
      ["/about" {:get {:handler index-handler}}]])
    (reitit-ring/routes
     (reitit-ring/create-resource-handler {:path "/" :root "/public"})

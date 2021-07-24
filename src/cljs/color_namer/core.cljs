@@ -29,24 +29,24 @@
 (defn send-input [input]
   (http/post "http://localhost" {:edn-params {:foo :bar}}))
 
-(defn load-color-name-info [color-name-id]
-  (http/get "http://localhost:3000" {:edn-params {:id 1}}))
+(defn load-colors-info []
+  (http/get "http://localhost:3000/color/find/all"))
 
 (def color-name (atom "abcd"))
-(defn color-input-compnent 
+(defn color-input-component 
   []
-  (let [a "a"]
+  (let [colors-info (atom (load-colors-info))]
     [:div
      [:input {:type  "color" :id "color-picker" :name "name"}]
-     [:input {:type "text" :id "input" :on-change #(reset! color-name (-> % .-target .-value))}]
-     [:h3 @color-name]
-     [:button {:type "button" :onClick #(reset! color-name (str %))} "Save input"]]))
+     [:input {:type "text" :id "input"}]
+     [:h3 @colors-info]
+     [:button {:type "button"} "Save input"]]))
 
 (defn home-page []
   (fn []
     [:span.main
      [:h1 "Welcome to color-namer"]
-     (color-input-compnent)]))
+     (color-input-component)]))
 
 ;; -------------------------
 ;; Page mounting component
