@@ -3,7 +3,17 @@
    [reitit.ring :as reitit-ring]
    [color-namer.middleware :refer [middleware]]
    [hiccup.page :refer [include-js include-css html5]]
-   [config.core :refer [env]]))
+   [config.core :refer [env]]
+   [datomic.api :as d]))
+
+(def db {:dbtype "mysql" :dbname "color_namer"
+         :user "jaeyeon" :password "12345678" :host "localhost"})
+
+(def db-uri "datomic:mem://foo")
+
+(def client (d/create-database db-uri))
+
+(def conn (d/connect db-uri))
 
 (def mount-target
   [:div#app

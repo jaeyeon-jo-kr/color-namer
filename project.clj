@@ -18,15 +18,15 @@
                   :scope "provided"]
                  [metosin/reitit "0.5.12"]
                  [pez/clerk "1.0.0"]
-                 [com.github.seancorfield/honeysql "2.0.0-rc3"]
                  [venantius/accountant "0.2.5"
-                  :exclusions [org.clojure/tools.reader]]]
+                  :exclusions [org.clojure/tools.reader]]
+                 [com.datomic/datomic-free "0.9.5544" :exclusions [joda-time org.slf4j/slf4j-nop com.google.guava/guava commons-codec]]]
   :jvm-opts ["-Xmx1G"]
   :plugins [[lein-environ "1.1.0"]
             [lein-cljsbuild "1.1.7"]
             [lein-asset-minifier "0.4.6"
              :exclusions [org.clojure/clojure]]]
-
+  
   :ring {:handler color-namer.handler/app
          :uberwar-name "color-namer.war"}
 
