@@ -4,11 +4,25 @@
    [reagent.core :as reagent :refer [atom]]
    [reagent.dom :as rdom]
    [reagent.session :as session]
+   [reagent.format :as format]
    [reitit.frontend :as reitit]
    [clerk.core :as clerk]
    [accountant.core :as accountant]
    [cljs-http.client :as http]
    [cljs.core.async :refer [<! >! chan]]))
+
+
+(defn long->rgb [code]
+  [(quot code 65536) (mod (quot code 256) 256) (mod code 256)])
+
+(defn long->rgb-str[code]
+  (str "#"
+       (-> (.toString code 16)
+           (.padStart 6 0))))
+  
+(defn rgb-str->long[str]
+  (-> (clojure.string/replace str #"#" "16r")
+      (cljs.reader/read-string)))
 
 ;; -------------------------
 ;; Routes
@@ -31,8 +45,8 @@
   (http/post "http://localhost:3000/color/register" {:edn-params input}))
 
 
-(def color-info-chan (chan))
-(def global-info (atom nil))
+
+(def color-info (atom []))
 
 (defn load-colors-info [colors-info]
   (go (let [response (<! (http/get "http://localhost:3000/color/find/all"))]
@@ -40,19 +54,38 @@
   colors-info)
 
 (defn canvas []
-  [:div
+  [:div {:id "canvas-dev"}
    [:canvas {:id "canvas" :width 150 :height 150}]])
 
 
+(defn update-name [color-info uid value]
+  (map (fn [[name code id]]
+         (if (= uid id)
+           [value code id]
+           [name code id])) color-info))
 
-(defn color-input-component 
+(defn update-code [color-info uid value]
+  (map (fn [[name code id]]
+         (if (= uid id)
+           [name value id]
+           [name code id])) color-info))
+  
+(defn color-input-cell 
+  [id name code]
+  [:div {:key (str "color-input-cell-" id)}
+    [:h5 (str id name code)]
+   [:input {:type  "color" :id (str "color-picker-" id) :name (str "color-" id) :value (str code)
+            :on-change #(swap! color-info update-code  id (-> % .-target .-value rgb-str->long))}]
+   [:input {:type "text" :id "input" :value name
+            :on-change #(swap! color-info update-name  id (-> % .-target .-value))}]])
+
+(defn color-input-component
   []
-   [:div
-     [:input {:type  "color" :id "color-picker" :name "name"}]
-     [:input {:type "text" :id "input"}]
-     [:h5 (str @global-info)]
-     [:button {:type "button" :on-click #(load-colors-info global-info)} "load input"]
-     [:button {:type "button" :on-click #(send-input @global-info)} "Save input"]])
+  [:div {:id "color-input-component"}
+   (map (fn [[name code id]]
+          (color-input-cell id name (long->rgb-str code))) @color-info)
+   [:button {:type "button" :id "load" :on-click #(load-colors-info color-info)} "load cells"]])
+  
 
 (defn home-page []
   (fn []

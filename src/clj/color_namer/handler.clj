@@ -41,14 +41,14 @@
 
 (defn add-color-handler
   [_request]
-  (println _request)
+  (println (:body _request))
   {:status 200
    :headers {"Content-Type" "application/edn"}
    :body (db-client/add-colors (:body _request))})
 
 (defn get-color-handler
   [_request]
-  (println _request)
+  (println (:body _request))
   {:status 200
    :headers {"Content-Type" "application/edn"}
    :body (str (db-client/find-all))})
