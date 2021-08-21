@@ -1,0 +1,16 @@
+(ns event_server.sup)
+
+(def sup-flags #erl{:strategy  :one_for_one
+                    :intensity 1
+                    :period    5})
+
+(def child-specs #erl(#erl{:id :event_server.clients
+                           :start-link #erl[]}))
+
+(defn start-link []
+  (supervisor/start_link #erl[:local :event_server.sup]
+                         :event_server.sup
+                         #erl()))
+
+(defn init [_]
+  #erl[:ok #erl[sup-flags child-specs]])

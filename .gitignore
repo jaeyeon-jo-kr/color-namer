@@ -22,3 +22,15 @@ pom.xml.asc
 .lsp/sqlite.db
 Procfile
 
+### Erlang ###
+.eunit
+*.o
+*.beam
+*.plt
+erl_crash.dump
+event_server/.concrete/DEV_MODE
+
+# rebar 3
+.rebar3
+_build/
+_checkouts/

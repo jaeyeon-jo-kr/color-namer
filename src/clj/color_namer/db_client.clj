@@ -3,10 +3,7 @@
 
 (def db-uri "datomic:mem://foo")
 
-
 (def conn (atom nil))
-
-
 
 (def color-name-schema[{:db/ident :color/name
                         :db/valueType :db.type/string
