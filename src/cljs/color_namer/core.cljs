@@ -44,6 +44,11 @@
   (prn input)
   (http/post "http://localhost:3000/color/register" {:edn-params input}))
 
+(defn draw
+  [context]
+  (set! (.-fillStyle context) "#FD0")
+  (.fillRect context 0 0 150 150))
+
 
 
 (def color-info (atom []))
@@ -55,7 +60,16 @@
 
 (defn canvas []
   [:div {:id "canvas-dev"}
-   [:canvas {:id "canvas" :width 150 :height 150}]])
+   [:canvas {:id "canvas" :width 500 :height 500
+             :onClick (fn [c]
+                        (js/console.log c)
+                        (js/console.log (.-target c))
+                        (js/console.log
+                         (-> c
+                             .-target
+                             (.getContext "2d")
+                             draw)))}]])
+
 
 
 (defn update-name [color-info uid value]
@@ -84,7 +98,8 @@
   [:div {:id "color-input-component"}
    (map (fn [[name code id]]
           (color-input-cell id name (long->rgb-str code))) @color-info)
-   [:button {:type "button" :id "load" :on-click #(load-colors-info color-info)} "load cells"]])
+   [:button {:type "button" :id "load"
+             :on-click #(load-colors-info color-info)} "load cells"]])
   
 
 (defn home-page []
