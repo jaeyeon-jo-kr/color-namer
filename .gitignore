@@ -21,6 +21,8 @@ pom.xml.asc
 .calva/output-window/output.calva-repl
 .lsp/sqlite.db
 Procfile
+/.clj-kondo/
+/.lsp/
 
 ### Erlang ###
 .eunit
