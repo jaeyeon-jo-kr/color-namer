@@ -20,7 +20,9 @@
                  [pez/clerk "1.0.0"]
                  [venantius/accountant "0.2.5"
                   :exclusions [org.clojure/tools.reader]]
-                 [com.datomic/datomic-free "0.9.5544" :exclusions [joda-time org.slf4j/slf4j-nop com.google.guava/guava commons-codec]]]
+                 [com.datomic/datomic-free "0.9.5544" :exclusions [joda-time org.slf4j/slf4j-nop com.google.guava/guava commons-codec]]
+                 [clj-commons/cljss "1.6.4"]
+                 [garden "1.3.10"]]
   :jvm-opts ["-Xmx1G"]
   :plugins [[lein-environ "1.1.0"]
             [lein-cljsbuild "1.1.7"]
