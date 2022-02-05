@@ -10,7 +10,30 @@
    [accountant.core :as accountant];; SPA Simple
    [garden.core :refer [css]]
    [cljs-http.client :as http]
-   [cljs.core.async :refer [<! >! chan]]))
+   [cljs.core.async :refer [<! >! chan]]
+   [thi.ng.geom.gl.core :as gl]
+   [thi.ng.geom.core :as geom]
+   [thi.ng.geom.matrix :as mat]
+   [thi.ng.geom.sphere :as sph]
+   [thi.ng.geom.gl.glmesh :as glmesh]
+   [thi.ng.geom.gl.shaders :as shaders]
+   [thi.ng.geom.triangle :as tri]
+   [thi.ng.geom.gl.camera :as cam]
+   [thi.ng.geom.gl.webgl.constants :as glc]
+   [thi.ng.geom.gl.webgl.animator :as anim]))
+
+(enable-console-print!)
+
+(def shader-spec
+  {:vs "void main() {
+          gl_Position = proj * view * vec4(position, 1.0);
+       }"
+   :fs "void main() {
+           gl_FragColor = vec4(0.5, 0.5, 1.0, 1.0);
+       }"
+   :uniforms {:view       :mat4
+              :proj       :mat4}
+   :attribs  {:position   :vec3}})
 
 (defonce app-state
   (atom {:canvas
@@ -49,21 +72,19 @@
   (prn input)
   (http/post "http://localhost:3000/color/register" {:edn-params input}))
 
-(defn draw
-  [context]
-  (set! (.-fillStyle context)
-        (get-in @app-state [:canvas :activated :color]))
-  (.fillRect context 0 0 150 150))
+(def activated-color-cursor
+  (cursor app-state [:canvas :activated :color]))
+
 
 (defn color-picker-component
   []
   (let [component-state (atom {})]
    (fn [] 
      [:div {:id "color-picker-component"}
-      [:h4 "Color picked : "
-       (cursor
-        app-state
-        [:canvas :activated :color])]
+      [:h4 {:style {:padding "20px"
+                    :background-color @activated-color-cursor
+                    :font-color "white"}}
+       "Color picked : " @activated-color-cursor]
       [:input
        {:type "color"
         :on-change
@@ -80,21 +101,51 @@
         (reset! colors-info (:body response))))
   colors-info)
 
+(defn combine-model-shader-and-camera
+  [context model shader-spec camera]
+  (-> model
+      (gl/as-gl-buffer-spec {})
+      (assoc :shader (shaders/make-shader-from-spec context shader-spec))
+      (gl/make-buffers-in-spec context glc/static-draw)
+      (cam/apply camera)))
+
+(defn draw
+  [context model shader-spec camera]
+  (set! (.-fillStyle context)
+        @activated-color-cursor)
+  (comment .fillRect context 0 0 150 150)
+  (doto context
+    (gl/clear-color-and-depth-buffer 0 0 0 1 1)
+    (gl/draw-with-shader (combine-model-shader-and-camera context model shader-spec camera))))
+
 (defn canvas []
-  (let [component-status (atom {:status {}})]
+  (let [component-status
+        (atom {:status {}
+               :camera (cam/perspective-camera {})
+               :shader-spec
+               {:vs "void main() {gl_Position = proj * view * vec4(position, 1.0);}"
+                :fs "void main() {gl_FragColor = vec4(0.5, 0.5, 1.0, 1.0);}"
+                :uniforms {:view       :mat4
+                           :proj       :mat4}
+                :attribs  {:position   :vec3}}
+               :triangle (geom/as-mesh (tri/triangle3 [[1 0 0] [0 0 0] [0 1 0]])
+                                       {:mesh (glmesh/gl-mesh 3)})})]
     (fn []
-      (let []
+      (let [{:keys [shader-spec camera triangle]} @component-status]
         [:div {:id "canvas-dev"}
          [:canvas
-          {:id "canvas"
+          {:id "main"
            :width 100
            :height 100
+           :onLoad (fn [e]
+                     (.log js/console "load canvas")
+                     (swap! component-status update-in [:status :context]
+                            (fn [_] (gl/gl-context e)))) 
            :onClick
            (fn [c]
-             (-> c
-                 .-target
-                 (.getContext "2d")
-                 draw))}]]))))
+             (->> (-> c .-target (.getContext "webgl")
+                      (draw triangle shader-spec camera))
+                  ))}]]))))
 
 (defn update-name [color-info uid value]
   (map (fn [[name code id]]
@@ -157,6 +208,42 @@
          [:button {:type "button" :id "load"
                    :on-click #(load-colors-info color-info)}
           " load cells"]]))))
+(defn sand-box []
+  (let [component-state
+        (atom {:box1 {:style {:width "min-content"
+                              :height "10px"
+                              :padding "20px"
+                              :border "1px solid"}
+                      :data-sizing "intrinsic"}})]
+    (fn []
+       [:div
+       [:p @component-state
+        "I am a paragraph of text that has a few words in it."]
+        [:p (get-in @component-state [:style :data-sizing])]
+        [:button
+         {:value "click to change box."
+          :on-click
+          (fn [e]
+            (case (get-in @component-state [:box1 :data-sizing])
+              "intrinsic"
+              (do 
+                (swap! component-state assoc-in [:box1 :data-sizing] "extrinsic"))
+              "extrinsic"
+              (do
+                (swap! component-state assoc-in [:box1 :data-sizing] "intrinsic")
+                (swap! component-state assoc-in [:box1 :style :width] "min-content")
+                (swap! component-state assoc-in [:box1 :style :height] "min-content"))))}
+         " change style"]
+        [:p {:style {:width "200px"
+                     :border "10px solid"
+                     :padding "20px"}} "?"]
+        [:p {:style {:width "200px"
+                     :border "1px solid"}} "?"]
+        [:article 
+         [:p {:style {:color "red" :font-size "1.5em"}} "abc"]
+         [:p "bcd"]]
+             
+        ])))
 
 (defn home []
   [:div
@@ -165,7 +252,9 @@
    [:h3 "canvas"]
    [canvas]
    [:h3 "select-color-pick"]
-   [color-picker-component]])
+   [color-picker-component]
+   [:h3 "my sand box"]
+   [sand-box]])
 
 ;; -------------------------
 ;; Initialize app
@@ -198,3 +287,5 @@
       (boolean (reitit/match-by-path router path)))})
   (comment (accountant/dispatch-current!))
   (mount-root))
+
+(comment defonce gl-ctx (gl/gl-context "main"))
