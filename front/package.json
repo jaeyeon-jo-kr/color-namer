@@ -1,0 +1,30 @@
+{
+  "name": "color_namer",
+  "version": "0.0.1",
+  "description": "ClojureScript and re-frame using color-namer example.",
+  "scripts": {
+    "compile": "npx shadow-cljs compile app",
+    "dev": "shadow-cljs watch app",
+    "release": "shadow-cljs release app",
+    "server": "shadow-cljs server app",
+    "clean": "rm -rf target; rm -rf public/js",
+    "clean-win": "rmdir /s /q public/js & rmdir /s /q target",
+    "postcss:build": "cross-env TAILWIND_MODE=build postcss ./src/color-namer/css/tailwind.css -o ./public/color-namer/css/site.css --verbose",
+    "postcss:watch": "cross-env TAILWIND_MODE=watch postcss ./src/color-namer/css/tailwind.css -o ./public/color-namer/css/site.css --verbose -w"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.2",
+    "cross-env": "^7.0.3",
+    "cssnano": "^5.0.17",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.6",
+    "postcss-cli": "^9.1.0",
+    "postcss-import": "^14.0.2",
+    "shadow-cljs": "^2.14.3",
+    "tailwindcss": "^3.0.22"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  }
+}

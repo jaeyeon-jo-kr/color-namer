@@ -1,0 +1,24 @@
+{:source-paths ["src"]
+
+ :dependencies [[reagent "1.1.0"]
+                [garden "1.3.10"]
+                [thi.ng/geom "1.0.0-RC4"]
+                [pez/clerk "1.0.0"]
+                [venantius/accountant "0.2.5"
+                 :exclusions [org.clojure/tools.reader]]
+                [metosin/reitit "0.5.12"]
+                [cljs-http "0.1.46"]]
+
+ :fs-watch {:hawk false}
+ :nrepl {:port 7002}
+ :builds       {:app {:target     :browser
+                      :output-dir "public/js"
+                      :asset-path "/js"
+                      :modules {:main {:init-fn color-namer.core/init}}
+                      :compiler-options {:shadow-keywords true}
+                      :devtools
+                      {:http-root   "public"
+                       :http-port   3000}}}
+ ;:dev-http     {3000 {:root    "public"
+ ;                     :handler color-namer.core/init}}
+ }
