@@ -1,8 +1,13 @@
 {
   "devDependencies": {
-    "shadow-cljs": "^2.14.3"
+    "autoprefixer": "^10.4.2",
+    "cssnano": "^5.0.17",
+    "postcss": "^8.4.6",
+    "postcss-cli": "^9.1.0",
+    "shadow-cljs": "^2.14.3",
+    "tailwindcss": "^3.0.22"
   },
-  "dependencies":{
+  "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }
