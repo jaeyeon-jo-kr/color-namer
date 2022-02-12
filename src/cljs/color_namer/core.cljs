@@ -279,7 +279,7 @@
                        "\npath :" path
                        "\nmatch : " match))
         (reagent/after-render clerk/after-render!)
-        (session/put! :route {:current-page (page-for current-page)
+        (session/put! :route {:current-page current-page
                               :route-params route-params})
         (clerk/navigate-page! path)))
     :path-exists?

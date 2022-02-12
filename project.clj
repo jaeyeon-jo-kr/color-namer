@@ -76,6 +76,8 @@
    :nrepl-middleware [cider.piggieback/wrap-cljs-repl]
    :css-dirs ["resources/public/css"]
    :ring-handler color-namer.handler/app}
+  
+  :hooks []
 
 
   :profiles
