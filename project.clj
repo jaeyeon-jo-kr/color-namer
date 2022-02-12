@@ -20,7 +20,11 @@
                  [pez/clerk "1.0.0"]
                  [venantius/accountant "0.2.5"
                   :exclusions [org.clojure/tools.reader]]
-                 [com.datomic/datomic-free "0.9.5544" :exclusions [joda-time org.slf4j/slf4j-nop com.google.guava/guava commons-codec]]
+                 [com.datomic/datomic-free "0.9.5544" 
+                  :exclusions [joda-time 
+                               org.slf4j/slf4j-nop 
+                               com.google.guava/guava 
+                               commons-codec]]
                  [garden "1.3.10"]
                  [thi.ng/geom "1.0.0-RC4"]]
   :jvm-opts ["-Xmx1G"]
@@ -76,22 +80,20 @@
    :nrepl-middleware [cider.piggieback/wrap-cljs-repl]
    :css-dirs ["resources/public/css"]
    :ring-handler color-namer.handler/app}
-  
-  :hooks []
-
 
   :profiles
   {:dev {:repl-options {:init-ns color-namer.repl}
-         :dependencies [[cider/piggieback "0.5.2"]
-                        [binaryage/devtools "1.0.2"]
-                        [ring/ring-mock "0.4.0"]
-                        [ring/ring-devel "1.9.1"]
-                        [prone "2020-01-17"]
-                        [figwheel-sidecar "0.5.20"]
-                        [nrepl "0.8.3"]
-                        [thheller/shadow-cljs "2.14.3"]
-                        [pjstadig/humane-test-output "0.10.0"]
-                        [cljs-http "0.1.46"]]
+         :dependencies
+         [[cider/piggieback "0.5.2"]
+          [binaryage/devtools "1.0.2"]
+          [ring/ring-mock "0.4.0"]
+          [ring/ring-devel "1.9.1"]
+          [prone "2020-01-17"]
+          [figwheel-sidecar "0.5.20"]
+          [nrepl "0.8.3"]
+          [thheller/shadow-cljs "2.17.1"]
+          [pjstadig/humane-test-output "0.10.0"]
+          [cljs-http "0.1.46"]]
 
          :source-paths ["env/dev/clj"]
 
@@ -102,7 +104,8 @@
 
          :env {:dev true}}
 
-   :shadow-cljs {:dependencies [[com.google.javascript/closure-compiler-unshaded "v20210505"]]}
+   :shadow-cljs {:dependencies 
+                 [[com.google.javascript/closure-compiler-unshaded "v20210505"]]}
 
    :uberjar {:hooks [minify-assets.plugin/hooks]
              :source-paths ["env/prod/clj"]
