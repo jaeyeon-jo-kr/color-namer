@@ -3,8 +3,7 @@
      [color-namer.handler :refer [app]]
      [color-namer.db-client :as db]
      [config.core :refer [env]]
-     [ring.adapter.jetty :refer [run-jetty]]
-     )
+     [ring.adapter.jetty :refer [run-jetty]])
     (:gen-class))
 
 

@@ -1,0 +1,47 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+o o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Jacking in...
+; Starting Jack-in Terminal: lein update-in :dependencies conj '[nrepl,"0.9.0"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.27.4"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- with-profile +dev repl :headless
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: 
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+clj꞉color-namer.server꞉> 
+; Jack-in done.
+clj꞉color-namer.server꞉> 
+; Evaluating file: handler.clj
+; Execution error (IllegalArgumentException) at reitit.middleware/expand-and-transform (middleware.cljc:90).
+; Don't know how to create ISeq from: color_namer.middleware$middleware
+; Evaluation of file handler.clj failed: class clojure.lang.Compiler$CompilerException
+
+clj꞉color-namer.server꞉> 
+clj꞉color-namer.handler꞉> 
+; Evaluating file: handler.clj
+; Execution error (IllegalArgumentException) at reitit.middleware/expand-and-transform (middleware.cljc:90).
+; Don't know how to create ISeq from: color_namer.middleware$middleware
+; Evaluation of file handler.clj failed: class clojure.lang.Compiler$CompilerException
+
+clj꞉color-namer.handler꞉> 
+clj꞉color-namer.handler꞉> 
+; Evaluating file: handler.clj
+#'color-namer.handler/app
+clj꞉color-namer.handler꞉> app
+#function[clojure.lang.AFunction/1]
+clj꞉color-namer.handler꞉> 
+#'color-namer.handler/app
+clj꞉color-namer.handler꞉> 
+; Evaluating file: handler.clj
+#'color-namer.handler/app
+clj꞉color-namer.handler꞉> (app "/page" identity)
+; Execution error (ArityException) at color-namer.handler/eval19889 (form-init15608815355815642958.clj:44).
+; Wrong number of args (2) passed to: reitit.ring/ring-handler/fn--1971
+clj꞉color-namer.handler꞉> 

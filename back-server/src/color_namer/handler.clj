@@ -69,4 +69,5 @@
    (reitit-ring/routes
     (reitit-ring/create-resource-handler {:path "/" :root "/public"})
     (reitit-ring/create-default-handler))
-   {:middleware middleware}))
+   ;{:middleware middleware}
+   ))

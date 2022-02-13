@@ -1,22 +1,23 @@
 (ns color-namer.db-client
-  (:require [datomic.api :as d]))
+  (:require [datomic.client.api :as d]))
 
 (def db-uri "datomic:mem://foo")
 
 (def conn (atom nil))
 
-(def color-name-schema[{:db/ident :color/name
-                        :db/valueType :db.type/string
-                        :db/cardinality :db.cardinality/one
-                        :db/doc "The name of color"}
-                       {:db/ident :color/code
-                        :db/valueType :db.type/long
-                        :db/cardinality :db.cardinality/one
-                        :db/doc "The code of color"}
-                       {:db/ident :color/id
-                        :db/valueType :db.type/long
-                        :db/cardinality :db.cardinality/one
-                        :db/doc "The id of color"}])
+(def color-name-schema
+  [{:db/ident :color/name
+    :db/valueType :db.type/string
+    :db/cardinality :db.cardinality/one
+    :db/doc "The name of color"}
+   {:db/ident :color/code
+    :db/valueType :db.type/long
+    :db/cardinality :db.cardinality/one
+    :db/doc "The code of color"}
+   {:db/ident :color/id
+    :db/valueType :db.type/long
+    :db/cardinality :db.cardinality/one
+    :db/doc "The id of color"}])
 
 
 (defn insert-color-names[color-names]
@@ -50,5 +51,3 @@
   (d/create-database db-uri)
   (reset! conn (d/connect db-uri))
   @(d/transact @conn color-name-schema))
-
-
