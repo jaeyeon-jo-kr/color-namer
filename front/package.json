@@ -9,8 +9,8 @@
     "server": "shadow-cljs server app",
     "clean": "rm -rf target; rm -rf public/js",
     "clean-win": "rmdir /s /q public/js & rmdir /s /q target",
-    "postcss:build": "cross-env TAILWIND_MODE=build postcss ./src/color-namer/css/tailwind.css -o ./public/color-namer/css/site.css --verbose",
-    "postcss:watch": "cross-env TAILWIND_MODE=watch postcss ./src/color-namer/css/tailwind.css -o ./public/color-namer/css/site.css --verbose -w"
+    "postcss:build": "cross-env TAILWIND_MODE=build postcss ./src/css/tailwind.css -o ./public/css/site.css --verbose",
+    "postcss:watch": "cross-env TAILWIND_MODE=watch postcss ./src/css/tailwind.css -o ./public/css/site.css --verbose -w"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",
