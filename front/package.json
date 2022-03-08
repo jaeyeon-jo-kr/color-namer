@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "ClojureScript and re-frame using color-namer example.",
   "scripts": {
-    "compile": "npx shadow-cljs compile app",
+    "compile": "shadow-cljs compile app",
     "dev": "shadow-cljs watch app",
     "release": "shadow-cljs release app",
     "server": "shadow-cljs server app",
@@ -20,11 +20,14 @@
     "postcss": "^8.4.6",
     "postcss-cli": "^9.1.0",
     "postcss-import": "^14.0.2",
-    "shadow-cljs": "^2.14.3",
+    "shadow-cljs": "^2.17.8",
     "tailwindcss": "^3.0.22"
   },
   "dependencies": {
+    "create-react-class": "^15.7.0",
+    "object-assign": "^4.1.1",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "scheduler": "^0.20.2"
   }
 }

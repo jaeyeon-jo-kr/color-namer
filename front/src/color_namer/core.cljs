@@ -1,8 +1,14 @@
 (ns color-namer.core
   (:require
+   [color-namer.router :as router]
    [reagent.dom :as rdom]
-   [color-namer.canvas :as canvas]))
+   [reagent.core :as r]
+   [color-namer.canvas :as canvas]
+   [reitit.frontend.easy :as rfe]
+   [reitit.frontend :as rf]
+   [reitit.coercion.spec :as rcs]))
 
+(defonce match (r/atom nil))
 
 (defn home []
   [:div
@@ -10,8 +16,15 @@
    [canvas/canvas]])
 
 
-(defn ^:export init
+
+(defn ^:export main
   []
+  (rfe/start!
+   (rf/router router/routes {:data {:coercion rcs/coercion}})
+   (fn [m] (reset! match m))
+   {:use-fragment true})
+  
   (rdom/render
    [home]
    (.getElementById js/document "app")))
+

@@ -1,6 +1,6 @@
 (ns color-namer.color-picker)
 
-(comment
+#_(comment
   (defn long->rgb [code]
     [(quot code 65536) (mod (quot code 256) 256) (mod code 256)])
 
