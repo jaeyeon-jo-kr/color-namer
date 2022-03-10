@@ -1,24 +1,24 @@
 (ns color-namer.canvas
 (:require
  [color-namer.app :as app]
- [reagent.core :as reagent :refer [atom cursor]]
+ [reagent.core :as reagent :refer [atom]]
  [thi.ng.geom.gl.core :as gl]
  [thi.ng.geom.core :as geom]
- [thi.ng.geom.matrix :as mat]
- [thi.ng.geom.sphere :as sph]
+ #_[thi.ng.geom.matrix :as mat]
+ #_[thi.ng.geom.sphere :as sph]
  [thi.ng.geom.gl.glmesh :as glmesh]
  [thi.ng.geom.gl.shaders :as shaders]
  [thi.ng.geom.triangle :as tri]
  [thi.ng.geom.gl.camera :as cam]
  [thi.ng.geom.gl.webgl.constants :as glc]
- [thi.ng.geom.gl.webgl.animator :as anim]))
+ #_[thi.ng.geom.gl.webgl.animator :as anim]))
 
 (defn get-activated-color []
   (get-in @app/state [:canvas :activated :color]))
 
 (defn set-activated-color! [color]
   (js/alert color)
-  (when 
+  (when @color
    (swap! assoc-in app/state [:canvas :activated :color] color)))
 
 (defn combine-model-shader-and-camera

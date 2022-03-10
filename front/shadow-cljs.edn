@@ -12,21 +12,19 @@
                 [cljs-http "0.1.46"]
                 [cljsjs/react "17.0.2-0"]
                 [cljsjs/react-dom "17.0.2-0"]]
- #_:resource-paths #_["public"]
-
- #_:fs-watch #_{:hawk false}
+ :fs-watch {:hawk false}
  :nrepl {:port 7002}
  :builds   {:app {:target     :browser
-
                   :output-dir "public/js"
                   :asset-path "/js"
-                  #_:compiler-options #_{:shadow-keywords true}
+                  :compiler-options {:shadow-keywords true}
+                  :source-map true
                   :modules
                   {:main
                    {:entries [color-namer.core]}}
                   :devtools
                   {:http-root   "public"
                    :http-port   3000}}}
- ;:dev-http     {3000 {:root    "public"
- ;                     :handler color-namer.core/init}}
- }
+ :external-config {:devtools/config {:features-to-install    [:formatters :hints]
+                                     :fn-symbol              "F"
+                                     :print-config-overrides true}}}
